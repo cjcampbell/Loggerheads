@@ -6,6 +6,8 @@ library(terra)
 library(tidyterra)
 library(sf)
 
+theme_set(theme_minimal())
+
 # Specify an equal-area projection before doing any area analyses
 myProj <- "+proj=aea +lon_0=-77 +lat_1=17 +lat_2=30 +lat_0=23.5 +datum=WGS84 +units=m +no_defs"
 
@@ -57,7 +59,7 @@ summedSurfaces <- lapply(listOfRasts, function(y) {sum(y)/nlyr(y)}) %>%
   rast()
 
 # Visualize.
-ggplot() +
+p_overlaps <- ggplot() +
   geom_spatraster(summedSurfaces, mapping = aes()) +
   geom_sf(data = sampleLocations, mapping = aes(shape = sample_season), color = "white") +
   scale_fill_viridis_c(na.value = NA) +
@@ -68,6 +70,7 @@ ggplot() +
 # i.e., limited evidence of movement. If that area is nonexistant or very small, that's
 # evidence of movement to me! Let's also identify the size of the areas where the 100% of the origins overlap
 # For each individual.
+ggsave(p_overlaps, filename = file.path("figs/p_overlaps.png"), width = 10, height = 10, dpi = 300)
 
 # Make new raster showing where 100% of scute samples overlap
 allOverlapping <- summedSurfaces == 1
