@@ -112,8 +112,10 @@ out_mls <- list.files(savepath, full.names = T) %>%
   lapply(readRDS) %>% 
   do.call("rbind", .)
 
+saveRDS(out_mls, file = paste0("out/paths_", nreps, "_allSimulations.rds"))
+
 # Plot example + least-cost paths.
-ggplot() +
+p_exPaths <- ggplot() +
   geom_spatraster(bb_sea, mapping = aes()) +
   geom_sf(
     slice(out_mls, 1:5, .by = id), 
@@ -122,6 +124,7 @@ ggplot() +
     slice(out_mls, which.min(length), .by = id), 
     mapping = aes(), color = "yellow") +
   facet_wrap(~id)
+ggsave(p_exPaths, filename = file.path("figs/example_paths.png"), width = 10, height = 10, dpi = 300)
 
 # Plot densities of paths.
 # path_densities <- lapply(as.character(sampleLocations$Turtle.ID), function(myid) {
@@ -153,10 +156,13 @@ path_weighted_densities <- lapply(as.character(sampleLocations$Turtle.ID), funct
   return(r2)
 }) %>% rast
 
-ggplot() +
+p_pathDesities <- ggplot() +
   geom_spatraster(path_weighted_densities, mapping = aes()) +
   scale_fill_viridis_c(option = "turbo", trans = "log10", na.value = NA) +
   facet_wrap(~lyr)
+ggsave(p_pathDesities, filename = file.path("figs/pathDensities.png"),  width = 10, height = 10, dpi = 300)
+
+
 
 # Make individual level plots of length-weighted densities.
 
