@@ -3,3 +3,8 @@
 .RData
 .Ruserdata
 data/surfaces from Beth/*
+R/00_presetup_generate surfaces.r
+R/testing/*
+figs_archive/*
+.DS_Store
+data/.DS_Store
